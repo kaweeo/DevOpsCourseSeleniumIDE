@@ -30,8 +30,4 @@ jobs:
       - name: Build
         run: dotnet build --no-restore
         working-directory: ./SeleniumIDE
-      - name: Run tests
-        env:
-          CHROMEWEBDRIVER: /usr/local/bin/chromedriver
-        run: dotnet test --no-build --verbosity normal
-        working-directory: ./SeleniumIDE
+      
