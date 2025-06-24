@@ -19,10 +19,10 @@ jobs:
       - name: Install Chrome and ChromeDriver
         run: |
           sudo apt-get update
-          sudo apt-get install -y google-chrome-stable
-          wget -q "https://chromedriver.storage.googleapis.com/137.0.7151.119/chromedriver_linux64.zip"
-          unzip chromedriver_linux64.zip
-          sudo mv chromedriver /usr/local/bin/
+          sudo apt-get install -y google-chrome-stable || true
+          wget -q "https://chromedriver.storage.googleapis.com/137.0.7151.119/chromedriver_linux64.zip" || { echo "Failed to download ChromeDriver"; exit 1; }
+          unzip chromedriver_linux64.zip || { echo "Failed to unzip ChromeDriver"; exit 1; }
+          sudo mv chromedriver /usr/local/bin/ || { echo "Failed to move ChromeDriver"; exit 1; }
           sudo chmod +x /usr/local/bin/chromedriver
       - name: Install dependencies
         run: dotnet restore
