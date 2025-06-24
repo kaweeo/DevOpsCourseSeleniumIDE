@@ -1,5 +1,4 @@
 name: Selenium IDE CI
-
 on:
   push:
     branches:
@@ -7,7 +6,6 @@ on:
   pull_request:
     branches:
       - main
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -18,15 +16,23 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '6.0.x'
-      - name: Install Chrome
+      - name: Install Chrome and ChromeDriver
         run: |
           sudo apt-get update
           sudo apt-get install -y google-chrome-stable
+          CHROME_VERSION=$(google-chrome --version | grep -oE '[0-9]+.[0-9]+.[0-9]+')
+          wget -q "https://chromedriver.storage.googleapis.com/$CHROME_VERSION/chromedriver_linux64.zip"
+          unzip chromedriver_linux64.zip
+          sudo mv chromedriver /usr/local/bin/
+          sudo chmod +x /usr/local/bin/chromedriver
       - name: Install dependencies
         run: dotnet restore
+        working-directory: ./SeleniumIDE
       - name: Build
         run: dotnet build --no-restore
+        working-directory: ./SeleniumIDE
       - name: Run tests
         env:
-          CHROMEWEBDRIVER: /usr/bin/google-chrome
-        run: dotnet test --verbose normal
+          CHROMEWEBDRIVER: /usr/local/bin/chromedriver
+        run: dotnet test --no-build --verbosity normal
+        working-directory: ./SeleniumIDE
