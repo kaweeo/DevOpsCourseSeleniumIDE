@@ -1,5 +1,4 @@
 name: Selenium IDE CI
-
 on:
   push:
     branches:
@@ -7,7 +6,6 @@ on:
   pull_request:
     branches:
       - main
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -24,9 +22,12 @@ jobs:
           sudo apt-get install -y google-chrome-stable
       - name: Install dependencies
         run: dotnet restore
+        working-directory: ./2-SeleniumIDE
       - name: Build
         run: dotnet build --no-restore
+        working-directory: ./2-SeleniumIDE
       - name: Run tests
         env:
           CHROMEWEBDRIVER: /usr/bin/google-chrome
         run: dotnet test --verbose normal
+        working-directory: ./2-SeleniumIDE
